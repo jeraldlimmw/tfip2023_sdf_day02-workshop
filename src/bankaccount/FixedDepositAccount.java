@@ -3,44 +3,58 @@ package bankaccount;
 public class FixedDepositAccount extends BankAccount {
 
     private Float interest;
+    private boolean interestChanged = false;
     private Integer durationInMonths;
-    private boolean durationChanged;
+    private boolean durationChanged = false;
 
+    // calling the FixedDepositAccount constructor with interest fixed at 3.0 and duration at 6
     public FixedDepositAccount(String name, Float balance) {
-        super(name, balance); // calling the super class constructor
-        this.interest = null;
-        this.durationInMonths = null;
-        this. durationChanged = false;
+        this(name, balance, 3f);
     }
 
-    // calling the FixedDepositAccount constructor and then changing interest
+    // calling the FixedDepositAccount constructor duration fixed at 6
     public FixedDepositAccount (String name, Float balance, Float interest) {
-        this(name, balance); 
-        this.interest = interest;
+        this(name, balance, interest, 6);
     }
 
-    // calling the FixedDepositAccount constructor and then changing interest and duration
     public FixedDepositAccount (String name, Float balance, Float interest, Integer duration) {
-        this(name, balance); 
+        super(name, balance); // calling the super class constructor
         this.interest = interest;
         this.durationInMonths = duration;
     }
 
-    public void changeDuration() {
+    public Float getInterest() { return interest; }
+    public void setInterest(Float interest) { this.interest = interest; }
+
+    public Integer getDurationInMonths() { return durationInMonths; }
+    public void setDurationInMonths(Integer durationInMonths) { this.durationInMonths = durationInMonths; }
+
+    public boolean isDurationChanged() { return durationChanged; }
+
+    
+    public void changeInterest(float newInterest) {
+        if (interestChanged) {
+            throw new IllegalArgumentException("Unable to change interest more than once");
+        }
+        interest = newInterest;
+        interestChanged = true;
+    }
+    
+    public void changeDuration(int newDuration) {
         if (durationChanged) {
             throw new IllegalArgumentException("Unable to change duration more than once");
         }
-        if (durationInMonths == 3) {
-            durationInMonths = 6;
-            System.out.println("Fixed deposit duration changed from 3 months to 6 months");
-        }
-        if (durationInMonths == 6) {
-            durationInMonths = 3;
-            System.out.println("Fixed deposit duration changed from 6 months to 3 months");
-        }
+        durationInMonths = newDuration;
         durationChanged = true;
     }
 
+    @Override
+    public void setAccountBalance(float accountBalance) {
+        System.out.println("Fixed deposit account balance cannot be changed");
+        return;
+    }
+
+    @Override
     public float getAccountBalance() {
         return super.getAccountBalance() * (1f + (interest/100));
     }

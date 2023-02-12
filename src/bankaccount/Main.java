@@ -3,6 +3,7 @@ package bankaccount;
 public class Main {
     
     public static void main (String[] args) {
+        // create new Bank Account
         BankAccount a = new BankAccount("Alex", 500f);
         check(a);
 
@@ -12,7 +13,9 @@ public class Main {
         a.withdraw(100f);
         check(a);
 
-        FixedDepositAccount b = new FixedDepositAccount("Betsy", 10000f, 4f, 6);
+        // create new Fixed Deposit Account
+        FixedDepositAccount b = new FixedDepositAccount("Betsy", 10000f);
+        System.out.println(b.getAccountBalance());
         check(b);
         
         b.deposit(500f);
@@ -21,10 +24,13 @@ public class Main {
         b.withdraw(500f);
         check(b);
 
-        b.changeDuration();
+        b.changeDuration(12);
         check(b);
 
-        b.changeDuration();
+        b.changeInterest(4f);
+        check(b);
+
+        b.changeInterest(6f);
         check(b);
     }
 

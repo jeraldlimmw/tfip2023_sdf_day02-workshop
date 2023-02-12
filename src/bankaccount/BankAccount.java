@@ -19,16 +19,15 @@ public class BankAccount {
     Date currDate;
 
     public BankAccount(String name) {
-        this.accountHolderName = name;
-        this.accountNo = accountNoGenerator();
-        this.accountBalance = 0f;
-        this.transactions = new LinkedList<>();
-        this.dateCreated = setDateTime();
+        this(name, 0f);
     }
 
     public BankAccount(String name, Float balance) {
-        this(name); // calling constructor
+        this.accountHolderName = name;
+        this.accountNo = accountNoGenerator();
         this.accountBalance = balance;
+        this.transactions = new LinkedList<>();
+        this.dateCreated = setDateTime();
     }
 
     // Account holder name and account number are read only. Cannot have setter.
@@ -61,17 +60,27 @@ public class BankAccount {
         return currDate;
     }
 
+    // pre: account cannot be closed and amount must be positive
+    // post: add amount to account balance
     public void deposit(float amount) {
-        if (amount < 0 || isClosed()) {
-            throw new IllegalArgumentException();
+        if (isClosed()) {
+            throw new IllegalArgumentException("Account closed");
+        }
+        if (amount < 0) {
+            throw new IllegalArgumentException("Unable to deposit negative amounts");
         }
         accountBalance += amount;
         transactions.add("deposit $" + amount + " at <" + setDateTime() + ">");
     }
 
+    // pre: account cannot be closed and amount must be positive
+    // post: subtract amount from account balance
     public void withdraw(float amount) {
-        if (amount < 0 || isClosed()) {
-            throw new IllegalArgumentException();
+        if (isClosed()) {
+            throw new IllegalArgumentException("Account closed");
+        }
+        if (amount < 0) {
+            throw new IllegalArgumentException("Unable to withdraw negative amounts");
         }
         accountBalance -= amount;
         transactions.add("withdraw $" + amount + " at <" + setDateTime() + ">");
@@ -84,13 +93,11 @@ public class BankAccount {
         if (!isClosed()){
             String strDateCreated = dateFormat.format(dateCreated);
             return "BankAccount [accountHolderName=" + accountHolderName + ", accountNo=" + accountNo + ", accountBalance="
-                    + accountBalance + ", transactions=" + transactions + ", dateCreated="
+                    + getAccountBalance() + ", transactions=" + transactions + ", dateCreated="
                     + strDateCreated + "]";
         } else {
             String strDateClosed = dateFormat.format(dateClosed);
             return "Bank Account closed on " + strDateClosed;
         }
-    }
-
-    
+    } 
 }
